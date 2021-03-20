@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Business.Interface;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IEmployeeManager _employeeManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IEmployeeManager employeeManager)
         {
             _logger = logger;
+            _employeeManager = employeeManager;
         }
 
         public IActionResult Index()
@@ -32,6 +35,12 @@ namespace Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult GetEmployee()
+        {
+            var emp = _employeeManager.Get();
+            return Content(emp.Name);
         }
     }
 }
